@@ -57,13 +57,13 @@ int main(int argc,char **argv) {
   }
 
   // Dump occurances
-  cout << "Raw occurrances (number of reads that occur a given number of times)" << endl;
+  cout << "Raw occurence (number of reads that occur a given number of times)" << endl;
   for(int i=0;i<occur_count.size();i++) {
     cout << i+1 << " " << occur_count[i] << endl;
   }
   cout << ">" << max_duplicates << " " << greater_than_max_count << endl;
   
-  cout << "Cumulative occurrances (number of reads)" << endl;
+  cout << "Cumulative occurences (number of reads)" << endl;
   int cumulative=greater_than_max_read_count;
   for(int i=occur_count.size()-1;i>=0;i--) {
     cumulative += occur_count[i]*(i+1);

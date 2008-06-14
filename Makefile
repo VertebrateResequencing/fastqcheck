@@ -7,7 +7,7 @@ LDFLAGS =
 
 .PHONY: clean
 
-all: fastqfilter fastqascii2txtqual fastqtrim fastqpolyremove
+all: fastq2duplicatecheck fastqfilter fastqascii2txtqual fastqtrim fastqpolyremove
 
 fastqfilter: fastqfilter.cpp fastqreader.h fastqwriter.h scoredsequence.h
 	@echo --- $@ ---

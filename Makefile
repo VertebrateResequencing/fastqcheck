@@ -25,6 +25,10 @@ fastqpolyremove: fastqployremove.cpp fastqreader.h fastqwriter.h scoredsequence.
 	@echo --- $@ ---
 	$(C++) $(CCFLAGS) fastqployremove.cpp -o fastqpolyremove
 
+fastq2duplicatecheck: fastq2duplicatecheck.cpp fastqreader.h scoredsequence.h
+	@echo --- $@ ---
+	$(C++) $(CCFLAGS) fastq2duplicatecheck.cpp -o fastq2duplicatecheck
+
 install: fastqascii2txtqual fastqtrim fastqfilter
 	cp fastqascii2txtqual ../bin
 	cp fastqtrim ../bin

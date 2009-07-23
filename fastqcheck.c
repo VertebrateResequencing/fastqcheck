@@ -19,7 +19,7 @@
 #define _T 3
 #define _N 4
 
-#define MAX_LENGTH 1000
+#define MAX_LENGTH 10000
 
 int main (int argc, char **argv)
 {
@@ -30,6 +30,7 @@ int main (int argc, char **argv)
   FILE *fil ;
   static int sum[5], qsum[256] ;		/* 0 automatically */
   static int psum[MAX_LENGTH][5], pqsum[MAX_LENGTH][256], nlen[MAX_LENGTH] ;
+  double erate;
 
   if (argc == 1)
     fil = stdin ;
@@ -49,8 +50,8 @@ int main (int argc, char **argv)
 	    }
 	}
       for (i = 0 ; i < length ; ++i)
-	{ ++sum[seq[i]] ; if (i < 50) ++psum[i][seq[i]] ;
-	  ++qsum[qval[i]] ; if (i < 50) ++pqsum[i][qval[i]] ;
+	{ ++sum[seq[i]] ; ++psum[i][seq[i]] ;
+	  ++qsum[qval[i]] ; ++pqsum[i][qval[i]] ;
 	  if (qval[i] > qMax) qMax = qval[i] ;
 	}
       free (seq) ; free (qval) ; free (id) ;
@@ -66,13 +67,16 @@ int main (int argc, char **argv)
 	      100*(sqrt(0.25*(double)total)/total), 100*(sqrt(0.25*(double)nseq)/nseq)) ;
       printf ("            A    C    G    T    N ") ;
       for (i = 0 ; i <= qMax ; ++i) printf ("%4d",i) ;
-      printf ("\nTotal  ") ;
+      printf (" AQ\nTotal  ") ;
       printf ("  %4.1f %4.1f %4.1f %4.1f %4.1f ", 
 	      100*((double)sum[_A]/total), 100*((double)sum[_C]/total),
 	      100*((double)sum[_G]/total), 100*((double)sum[_T]/total),
 	      100*((double)sum[_N]/total)) ;
-      for (j = 0 ; j <= qMax ; ++j) 
+      for (erate = j = 0 ; j <= qMax ; ++j) {
 	printf ("%4d",(int)(1000*((double)qsum[j]/total))) ;
+	erate += pow(10, j/-10.0) * qsum[j];
+      }
+      printf(" %4.1f", -10*log(erate/total)/log(10));
       for (i = 0 ; i < lengthMax ; ++i)
 	{ nseq -= nlen[i] ;
 	  printf ("\nbase %2d", i+1) ;
@@ -80,8 +84,11 @@ int main (int argc, char **argv)
 		  100*((double)psum[i][_A]/nseq), 100*((double)psum[i][_C]/nseq),
 		  100*((double)psum[i][_G]/nseq), 100*((double)psum[i][_T]/nseq),
 		  100*((double)psum[i][_N]/nseq)) ;
-	    for (j = 0 ; j <= qMax ; ++j) 
+	  for (erate = j = 0 ; j <= qMax ; ++j) {
 	      printf ("%4d",(int)(1000*((double)pqsum[i][j]/nseq))) ;
+	      erate += pow(10, j/-10.0) * pqsum[i][j];
+	  }
+	  printf(" %4.1f", -10*log(erate/nseq)/log(10));
 	}
       printf ("\n") ;
     }

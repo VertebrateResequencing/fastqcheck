@@ -73,7 +73,7 @@ int main (int argc, char **argv)
 	      100*((double)sum[_G]/total), 100*((double)sum[_T]/total),
 	      100*((double)sum[_N]/total)) ;
       for (erate = j = 0 ; j <= qMax ; ++j) {
-	printf ("%4d",(int)(1000*((double)qsum[j]/total))) ;
+	printf ("%4d",(int)lrint(1000*((double)qsum[j]/total))) ;
 	erate += pow(10, j/-10.0) * qsum[j];
       }
       printf(" %4.1f", -10*log(erate/total)/log(10));
@@ -85,7 +85,7 @@ int main (int argc, char **argv)
 		  100*((double)psum[i][_G]/nseq), 100*((double)psum[i][_T]/nseq),
 		  100*((double)psum[i][_N]/nseq)) ;
 	  for (erate = j = 0 ; j <= qMax ; ++j) {
-	      printf ("%4d",(int)(1000*((double)pqsum[i][j]/nseq))) ;
+	      printf ("%4d",(int)lrint(1000*((double)pqsum[i][j]/nseq))) ;
 	      erate += pow(10, j/-10.0) * pqsum[i][j];
 	  }
 	  printf(" %4.1f", -10*log(erate/nseq)/log(10));

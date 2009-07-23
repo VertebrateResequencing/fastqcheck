@@ -8,8 +8,14 @@
  * Last edited: Oct 26 13:58 2006 (rd)
  * Created: Tue May  9 01:05:21 2006 (rd)
  *-------------------------------------------------------------------
+ * Altered by James Bonfield: max length increased, limit of 50 
+ * cycles removed, add global error rate for the entire cycle.
+ * Altered by David K Jackson (david.jackson@sanger.ac.uk): rounding
+ * of thousandths of clusters with given Q at a given cycle changed,
+ * -std=c99 now required for compile.
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include "readseq.h"
@@ -36,7 +42,7 @@ int main (int argc, char **argv)
     fil = stdin ;
   else if (!(fil = fopen (argv[1], "r")))
     { fprintf (stderr, "Failed to open fastq file %s\n", argv[1]) ;
-      exit (-1) ;
+      exit (EXIT_FAILURE) ;
     }
 
   while (readFastq (fil, dna2indexConv, &seq, &qval, &id, &length))
@@ -46,7 +52,7 @@ int main (int argc, char **argv)
 	{ lengthMax = length ;
 	  if (length > MAX_LENGTH)
 	    { fprintf (stderr, "read %s length = %d longer than MAX_LENGTH = %d; edit and recompile with larger MAX_LENGTH\n", id, length, MAX_LENGTH) ;
-	      exit (-1) ;
+	      exit (EXIT_FAILURE) ;
 	    }
 	}
       for (i = 0 ; i < length ; ++i)
@@ -92,6 +98,6 @@ int main (int argc, char **argv)
 	}
       printf ("\n") ;
     }
-  exit(0);
+  exit(EXIT_SUCCESS);
 
 }

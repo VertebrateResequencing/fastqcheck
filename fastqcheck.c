@@ -5,7 +5,7 @@
  * Description: check and return basic stats for a fastq file
  * Exported functions:
  * HISTORY:
- * Last edited: Oct 26 13:58 2006 (rd)
+ * Last edited: Mon Jul 27 17:54:52 BST 2009 (dj3)
  * Created: Tue May  9 01:05:21 2006 (rd)
  *-------------------------------------------------------------------
  * Altered by James Bonfield: max length increased, limit of 50 
@@ -13,6 +13,9 @@
  * Altered by David K Jackson (david.jackson@sanger.ac.uk): rounding
  * of thousandths of clusters with given Q at a given cycle changed,
  * -std=c99 now required for compile.
+ * Fixes from Petr Danecek (pd3@sanger.ac.uk): avoid overflow on 
+ * total by changing it to an unsigned long int, plus fixes to avoid
+ * gcc -Wall gripes.
  */
 
 #include <stdlib.h>
@@ -30,7 +33,8 @@
 int main (int argc, char **argv)
 {
   int i, j, length, lengthMax = 0, qMax = 0 ;
-  int nseq = 0, total = 0 ;
+  int nseq = 0;
+  unsigned long int total = 0 ;
   char *seq, *id ;
   unsigned char *qval ;
   FILE *fil ;
@@ -56,14 +60,14 @@ int main (int argc, char **argv)
 	    }
 	}
       for (i = 0 ; i < length ; ++i)
-	{ ++sum[seq[i]] ; ++psum[i][seq[i]] ;
+	{ ++sum[(int)seq[i]] ; ++psum[i][(int)seq[i]] ;
 	  ++qsum[qval[i]] ; ++pqsum[i][qval[i]] ;
 	  if (qval[i] > qMax) qMax = qval[i] ;
 	}
       free (seq) ; free (qval) ; free (id) ;
     }
 
-  printf ("%d sequences, %d total length", nseq, total) ;
+  printf ("%d sequences, %ld total length", nseq, total) ;
   if (nseq)
     printf (", %.2f average, %d max", total/(float)nseq, lengthMax) ;
   printf ("\n") ;

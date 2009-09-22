@@ -16,8 +16,8 @@
  * Fixes from Petr Danecek (pd3@sanger.ac.uk): avoid overflow on 
  * total by changing it to an unsigned long int, plus fixes to avoid
  * gcc -Wall gripes.
- * Change requested by Richard Durbin, Petr Danecek, to space numbers in
- * groups of three.
+ * Change requested by Richard Durbin, Petr Danecek, to space long
+ * numbers rather than rely on fixed width fields.
  */
 
 #include <stdlib.h>

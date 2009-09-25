@@ -34,7 +34,7 @@
 
 int main (int argc, char **argv)
 {
-  int i, j, length, lengthMax = 0, qMax = 0 ;
+  int i, j, length, lengthMax = 0, qMax = 0, status ;
   int nseq = 0;
   unsigned long int total = 0 ;
   char *seq, *id ;
@@ -51,7 +51,7 @@ int main (int argc, char **argv)
       exit (EXIT_FAILURE) ;
     }
 
-  while (readFastq (fil, dna2indexConv, &seq, &qval, &id, &length))
+  while ( (status=readFastq (fil, dna2indexConv, &seq, &qval, &id, &length)) > 0)
     { ++nseq ; ++nlen[length] ;
       total += length ;
       if (length > lengthMax) 
@@ -67,6 +67,11 @@ int main (int argc, char **argv)
 	  if (qval[i] > qMax) qMax = qval[i] ;
 	}
       free (seq) ; free (qval) ; free (id) ;
+    }
+
+    if ( status<0 )
+    {
+        exit (EXIT_FAILURE);
     }
 
   printf ("%d sequences, %ld total length", nseq, total) ;

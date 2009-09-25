@@ -184,7 +184,7 @@ int readFastq (FILE *fil, int *conv,
 /* get id */
   c = getc (fil) ;
   if (!feof(fil) && c != '@')			/* header line */
-    { fprintf (stderr, "bad @ header line %d\n", line) ; return 0 ; }
+    { fprintf (stderr, "bad @ header line %d\n", line) ; return -1 ; }
   
   c = getc(fil) ;
   n = 0 ;			/* id */
@@ -196,7 +196,7 @@ int readFastq (FILE *fil, int *conv,
   if (id) add (0, id, &buflen, n) ;
   
   if (!feof (fil) && c != '\n')
-    { fprintf (stderr, "bad @ identifier line %n\n", line) ; return 0 ; }
+    { fprintf (stderr, "bad @ identifier line %d\n", line) ; return -1 ; }
   ++line ;
 
   /* ensure whitespace ignored */
@@ -226,7 +226,7 @@ int readFastq (FILE *fil, int *conv,
             else
               fprintf (stderr, "Bad char 0x%x = '%c' at line %d, base %d\n",
           	     c, c, line, n) ;
-            return 0 ;
+            return -1 ;
           }
           break;
         case -3:
@@ -246,17 +246,17 @@ int readFastq (FILE *fil, int *conv,
 /* second block with same identifier and matching quality values */
   c = getc (fil) ;
   if (!feof(fil) && c != '+')			/* header line */
-    { fprintf (stderr, "bad + header line %d\n", line) ; return 0 ; }
+    { fprintf (stderr, "bad + header line %d\n", line) ; return -1 ; }
   
   c = getc(fil) ; if (id) cp = *id ;
   while (!feof (fil) && c != ' ' && c != '\n' && c != '\t')
     { if (id && c != *cp++) 
-	{ fprintf (stderr, "mismatching + identifier line %d\n", line) ; return 0 ; }
+	{ fprintf (stderr, "mismatching + identifier line %d\n", line) ; return -1 ; }
       c = getc (fil) ;
     }
   
   if (!feof (fil) && c != '\n')
-    { fprintf (stderr, "bad + identifier line %n\n", line) ; return 0 ; }
+    { fprintf (stderr, "bad + identifier line %d\n", line) ; return -1 ; }
   ++line ;
 
   m = 0 ;			/* qualities */
@@ -285,7 +285,7 @@ int readFastq (FILE *fil, int *conv,
   if (qval) add (0, qval, &buflen, m) ;
 
   if (m != n)
-    { fprintf (stderr, "mismatching seq, q length line %n\n", line) ; return 0 ; }
+    { fprintf (stderr, "mismatching seq, q length line %d\n", line) ; return -1 ; }
 
   return n ;
 }

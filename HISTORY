@@ -1,0 +1,19 @@
+fastqcheck was original written by Richard Durbin around 1993/2006.
+
+Further development was carried out by staff at the Sanger
+Institute when it became part of a private 'fastqtools' SVN
+repository in 2009.
+
+This git repository was created in 2013 by Sendu Bala in the
+Vertebrate Resequencing (VR) group at the Sanger for the purpose
+of making the code publicly available. It carries the history from
+the SVN repository. The SVN version, tagged 'v1', incorporates
+changes that Petr Danecek (VR) made during the 1000 genomes
+project, in addition to some other changes that VR did not use
+for that project. The outputs of fastqcheck are different
+between v1 and what VR used, which is tagged as v1b.
+
+v1 is probably "better" than v1b, but is untested by those of
+us in VR. Since the public release is intended to help people
+duplicate what we did for the 1000 genomes project, v1b is the
+default, at the HEAD of the master branch.

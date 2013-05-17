@@ -1,12 +1,30 @@
 /*  File: readseq.h
  *  Author: Richard Durbin (rd@sanger.ac.uk)
- *  Copyright (C) Genome Research Limited, 1993-
  *-------------------------------------------------------------------
  * Description:
  * Exported functions:
  * HISTORY:
- * Last edited: Sep 24 21:23 2008 (rd)
+ * Last code change: Sep 24 21:23 2008 (rd)
  * Created: some time in 1993
+ *-------------------------------------------------------------------
+ * Copyright (c) 1993, 2008 Genome Research Limited.
+ *
+ * License:
+ * This file is part of fastqcheck.
+ *
+ * fastqcheck is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see
+ * L<http://www.gnu.org/licenses/>.
  *-------------------------------------------------------------------
  */
 

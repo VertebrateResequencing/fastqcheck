@@ -1,6 +1,5 @@
 /*  File: readseq.c
  *  Author: Richard Durbin (rd@sanger.ac.uk)
- *  Copyright (C) Genome Research Limited, 1993-2006
  *-------------------------------------------------------------------
  * Description: generic code to read Pearson format files (fasta)
  		>header line
@@ -10,12 +9,31 @@
 		will work on fil == stdin
  * Exported functions: readSequence, writeSequence, seqConvert, readFastq, writeFastq
  * HISTORY:
- * Last edited: Sep 19 16:24 2008 (rd)
+ * Last code change: Sep 17 08:57:03 2009 (pd3)
  * * Jul 29 22:42 2008 (rd): added writeFastq
  * * Oct 22 06:45 2006 (rd): added readFastq
  * * Dec 29 23:35 1993 (rd): now works off FILE*, returns id and desc
  * Created: Tue Jan 19 21:14:35 1993 (rd)
  * CVS info: $Id: readseq.c,v 1.2 2009/11/26 10:50:19 petr Exp $
+ *-------------------------------------------------------------------
+ * Copyright (c) 1993, 2006, 2008, 2009 Genome Research Limited.
+ *
+ * License:
+ * This file is part of fastqcheck.
+ *
+ * fastqcheck is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see
+ * L<http://www.gnu.org/licenses/>.
  *-------------------------------------------------------------------
  */
 

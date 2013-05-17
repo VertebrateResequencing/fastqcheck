@@ -1,11 +1,11 @@
 /*  File: fastqcheck.c
  *  Author: Richard Durbin (rd@sanger.ac.uk)
- *  Copyright (C) Genome Research Limited, 2006
  *-------------------------------------------------------------------
  * Description: check and return basic stats for a fastq file
  * Exported functions:
  * HISTORY:
- * Last edited: Mon Jul 27 17:54:52 BST 2009 (dj3)
+ * Last code change: Mon Sep 28 13:28:56 2009 (pd3)
+ * Edited: Mon Jul 27 17:54:52 BST 2009 (dj3)
  * Created: Tue May  9 01:05:21 2006 (rd)
  *-------------------------------------------------------------------
  * Altered by James Bonfield: max length increased, limit of 50 
@@ -17,14 +17,32 @@
  * total by changing it to an unsigned long int, plus fixes to avoid
  * gcc -Wall gripes.
  *
- * Get the latest version from
- *      http://svn.internal.sanger.ac.uk/cgi-bin/viewvc.cgi/tools/trunk/fastqtools/fastqcheck.c?root=new-pipeline-dev&view=log
- *
  * Dependencies:
  *      readseq.c readseq.h fastqcheck.c
  *
  * Compile by running:
  *      gcc -std=c99 readseq.c fastqcheck.c -o fastqcheck -lm
+ *
+ *-------------------------------------------------------------------
+ * Copyright (c) 2006, 2009, 2010, 2013 Genome Research Limited.
+ *
+ * License:
+ * This file is part of fastqcheck.
+ *
+ * fastqcheck is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see
+ * L<http://www.gnu.org/licenses/>.
+ *-------------------------------------------------------------------
  */
 
 #include <stdlib.h>

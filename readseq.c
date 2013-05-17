@@ -15,7 +15,7 @@
  * * Oct 22 06:45 2006 (rd): added readFastq
  * * Dec 29 23:35 1993 (rd): now works off FILE*, returns id and desc
  * Created: Tue Jan 19 21:14:35 1993 (rd)
- * CVS info: $Id: readseq.c,v 1.3 2001/10/26 09:35:03 searle Exp $
+ * CVS info: $Id: readseq.c,v 1.2 2009/11/26 10:50:19 petr Exp $
  *-------------------------------------------------------------------
  */
 
@@ -184,19 +184,19 @@ int readFastq (FILE *fil, int *conv,
 /* get id */
   c = getc (fil) ;
   if (!feof(fil) && c != '@')			/* header line */
-    { fprintf (stderr, "bad @ header line %d\n", line) ; return -1 ; }
+    { fprintf (stderr, "bad @ header line %d, got [0x%x] [%c]\n", line,(int)c,c) ; return -1; }
   
   c = getc(fil) ;
   n = 0 ;			/* id */
   buflen = -32;
-  while (!feof (fil) && c != ' ' && c != '\n' && c != '\t')
+  while (!feof (fil) && c != '\n' ) /* the fastq identifier can contain spaces! */
     { if (id) add (c, id, &buflen, n++) ;
       c = getc (fil) ;
     }
   if (id) add (0, id, &buflen, n) ;
   
   if (!feof (fil) && c != '\n')
-    { fprintf (stderr, "bad @ identifier line %d\n", line) ; return -1 ; }
+    { fprintf (stderr, "bad @ identifier line %d, got [0x%x]\n", line,(int)c) ; return -1; }
   ++line ;
 
   /* ensure whitespace ignored */
@@ -226,7 +226,7 @@ int readFastq (FILE *fil, int *conv,
             else
               fprintf (stderr, "Bad char 0x%x = '%c' at line %d, base %d\n",
           	     c, c, line, n) ;
-            return -1 ;
+            return -1;
           }
           break;
         case -3:
@@ -246,17 +246,17 @@ int readFastq (FILE *fil, int *conv,
 /* second block with same identifier and matching quality values */
   c = getc (fil) ;
   if (!feof(fil) && c != '+')			/* header line */
-    { fprintf (stderr, "bad + header line %d\n", line) ; return -1 ; }
+    { fprintf (stderr, "bad + header line %d\n", line) ; return -1; }
   
   c = getc(fil) ; if (id) cp = *id ;
   while (!feof (fil) && c != ' ' && c != '\n' && c != '\t')
     { if (id && c != *cp++) 
-	{ fprintf (stderr, "mismatching + identifier line %d\n", line) ; return -1 ; }
+	{ fprintf (stderr, "mismatching + identifier line %d\n", line) ; return -1; }
       c = getc (fil) ;
     }
   
   if (!feof (fil) && c != '\n')
-    { fprintf (stderr, "bad + identifier line %d\n", line) ; return -1 ; }
+    { fprintf (stderr, "bad + identifier line %d\n", line) ; return -1; }
   ++line ;
 
   m = 0 ;			/* qualities */
@@ -285,7 +285,7 @@ int readFastq (FILE *fil, int *conv,
   if (qval) add (0, qval, &buflen, m) ;
 
   if (m != n)
-    { fprintf (stderr, "mismatching seq, q length line %d\n", line) ; return -1 ; }
+    { fprintf (stderr, "mismatching seq, q length line %d\n", line) ; return -1; }
 
   return n ;
 }

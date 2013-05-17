@@ -5,7 +5,7 @@
  * Description: check and return basic stats for a fastq file
  * Exported functions:
  * HISTORY:
- * Last edited: Tue Sep 22 14:40:02 BST 2009 (jo3)
+ * Last edited: Mon Jul 27 17:54:52 BST 2009 (dj3)
  * Created: Tue May  9 01:05:21 2006 (rd)
  *-------------------------------------------------------------------
  * Altered by James Bonfield: max length increased, limit of 50 
@@ -16,10 +16,15 @@
  * Fixes from Petr Danecek (pd3@sanger.ac.uk): avoid overflow on 
  * total by changing it to an unsigned long int, plus fixes to avoid
  * gcc -Wall gripes.
- * Change requested by Richard Durbin, Petr Danecek, to space long
- * numbers rather than rely on fixed width fields.
- * sum, qsum, psum and pqsum all changed to unsigned long int to fix
- * overflow error.
+ *
+ * Get the latest version from
+ *      http://svn.internal.sanger.ac.uk/cgi-bin/viewvc.cgi/tools/trunk/fastqtools/fastqcheck.c?root=new-pipeline-dev&view=log
+ *
+ * Dependencies:
+ *      readseq.c readseq.h fastqcheck.c
+ *
+ * Compile by running:
+ *      gcc -std=c99 readseq.c fastqcheck.c -o fastqcheck -lm
  */
 
 #include <stdlib.h>
@@ -37,13 +42,13 @@
 int main (int argc, char **argv)
 {
   int i, j, length, lengthMax = 0, qMax = 0, status ;
-  int nseq = 0 ;
+  int nseq = 0;
   unsigned long int total = 0 ;
   char *seq, *id ;
   unsigned char *qval ;
   FILE *fil ;
-  static unsigned long int sum[5], qsum[256] ;        /* 0 automatically */
-  static unsigned long int psum[MAX_LENGTH][5], pqsum[MAX_LENGTH][256], nlen[MAX_LENGTH] ;
+  static int sum[5], qsum[256] ;		/* 0 automatically */
+  static int psum[MAX_LENGTH][5], pqsum[MAX_LENGTH][256], nlen[MAX_LENGTH] ;
   double erate;
 
   if (argc == 1)
@@ -53,30 +58,28 @@ int main (int argc, char **argv)
       exit (EXIT_FAILURE) ;
     }
 
-  while ( (status=readFastq (fil, dna2indexConv, &seq, &qval, &id, &length)) > 0)
+  while ( (status=readFastq (fil, dna2indexConv, &seq, &qval, &id, &length))>0 )
     { ++nseq ; ++nlen[length] ;
       total += length ;
-
       if (length > lengthMax) 
-        { lengthMax = length ;
-          if (length > MAX_LENGTH)
-            { fprintf (stderr, "read %s length = %d longer than MAX_LENGTH = %d; edit and recompile with larger MAX_LENGTH\n", id, length, MAX_LENGTH) ;
-              exit (EXIT_FAILURE) ;
-            }
-        }
-
+	{ lengthMax = length ;
+	  if (length > MAX_LENGTH)
+	    { fprintf (stderr, "read %s length = %d longer than MAX_LENGTH = %d; edit and recompile with larger MAX_LENGTH\n", id, length, MAX_LENGTH) ;
+	      exit (EXIT_FAILURE) ;
+	    }
+	}
       for (i = 0 ; i < length ; ++i)
-        { ++sum[(int)seq[i]] ; ++psum[i][(int)seq[i]] ;
-          ++qsum[qval[i]] ; ++pqsum[i][qval[i]] ;
-          if (qval[i] > qMax) qMax = qval[i] ;
-        }
+	{ ++sum[(int)seq[i]] ; ++psum[i][(int)seq[i]] ;
+	  ++qsum[qval[i]] ; ++pqsum[i][qval[i]] ;
+	  if (qval[i] > qMax) qMax = qval[i] ;
+	}
       free (seq) ; free (qval) ; free (id) ;
     }
 
     if ( status<0 )
-      {
+    {
         exit (EXIT_FAILURE);
-      }
+    }
 
   printf ("%d sequences, %ld total length", nseq, total) ;
   if (nseq)
@@ -85,47 +88,34 @@ int main (int argc, char **argv)
 
   if (total)
     { printf ("Standard deviations at 0.25:  total %5.2f %%, per base %5.2f %%\n", 
-          100*(sqrt(0.25*(double)total)/total), 100*(sqrt(0.25*(double)nseq)/nseq)) ;
+	      100*(sqrt(0.25*(double)total)/total), 100*(sqrt(0.25*(double)nseq)/nseq)) ;
       printf ("            A    C    G    T    N ") ;
       for (i = 0 ; i <= qMax ; ++i) printf (" %3d",i) ;
       printf (" AQ\nTotal  ") ;
       printf ("  %4.1f %4.1f %4.1f %4.1f %4.1f ", 
-          100*((double)sum[_A]/total), 100*((double)sum[_C]/total),
-          100*((double)sum[_G]/total), 100*((double)sum[_T]/total),
-          100*((double)sum[_N]/total)) ;
-
-
-
-
-
-      for (erate = j = 0 ; j <= qMax ; ++j)
-        {
-          printf (" %3d",(int)lrint(1000*((double)qsum[j]/total))) ;
-          erate += pow(10, j/-10.0) * qsum[j];
-        }
-
-
-
-
-
+	      100*((double)sum[_A]/total), 100*((double)sum[_C]/total),
+	      100*((double)sum[_G]/total), 100*((double)sum[_T]/total),
+	      100*((double)sum[_N]/total)) ;
+      for (erate = j = 0 ; j <= qMax ; ++j) {
+	printf (" %3d",(int)lrint(1000*((double)qsum[j]/total))) ;
+	erate += pow(10, j/-10.0) * qsum[j];
+      }
       printf(" %4.1f", -10*log(erate/total)/log(10));
       for (i = 0 ; i < lengthMax ; ++i)
-        { nseq -= nlen[i] ;
-          printf ("\nbase %2d", i+1) ;
-          printf ("  %4.1f %4.1f %4.1f %4.1f %4.1f ",
-            100*((double)psum[i][_A]/nseq), 100*((double)psum[i][_C]/nseq),
-            100*((double)psum[i][_G]/nseq), 100*((double)psum[i][_T]/nseq),
-            100*((double)psum[i][_N]/nseq)) ;
-
-          for (erate = j = 0 ; j <= qMax ; ++j)
-            {
-              printf (" %3d",(int)lrint(1000*((double)pqsum[i][j]/nseq))) ;
-              erate += pow(10, j/-10.0) * pqsum[i][j];
-            }
-          printf(" %4.1f", -10*log(erate/nseq)/log(10));
-
-        }
-        printf ("\n") ;
+	{ nseq -= nlen[i] ;
+	  printf ("\nbase %2d", i+1) ;
+	  printf ("  %4.1f %4.1f %4.1f %4.1f %4.1f ",
+		  100*((double)psum[i][_A]/nseq), 100*((double)psum[i][_C]/nseq),
+		  100*((double)psum[i][_G]/nseq), 100*((double)psum[i][_T]/nseq),
+		  100*((double)psum[i][_N]/nseq)) ;
+	  for (erate = j = 0 ; j <= qMax ; ++j) {
+	      printf (" %3d",(int)lrint(1000*((double)pqsum[i][j]/nseq))) ;
+	      erate += pow(10, j/-10.0) * pqsum[i][j];
+	  }
+	  printf(" %4.1f", -10*log(erate/nseq)/log(10));
+	}
+      printf ("\n") ;
     }
   exit(EXIT_SUCCESS);
+
 }
